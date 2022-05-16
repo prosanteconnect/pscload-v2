@@ -117,7 +117,7 @@ public class Professionnel extends Ps implements RassEntity {
 		professions.forEach(profession -> exercicesProfessionnels.add((ExerciceProfessionnel) profession));
 		return exercicesProfessionnels;
 	}
-
+  
 	@Override
 	public boolean equals(Object o) {
 		return super.equals(o);
