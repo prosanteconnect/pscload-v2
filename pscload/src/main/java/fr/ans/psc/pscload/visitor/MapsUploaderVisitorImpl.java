@@ -36,8 +36,7 @@ public class MapsUploaderVisitorImpl implements MapsVisitor {
 
 	private PsApi psApi;
 
-	@Value("${snitch}")
-	private boolean debug;
+	private boolean debug = true;
 
 	/**
 	 * Instantiates a new maps uploader visitor impl.
