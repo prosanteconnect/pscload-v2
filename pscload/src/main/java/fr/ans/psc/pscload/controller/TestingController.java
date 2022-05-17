@@ -176,7 +176,7 @@ public class TestingController {
 	 *
 	 * @return the response entity
 	 */
-	@PostMapping(value = "test/process/full-run")
+	@PostMapping(value = "/process/full-run")
 	public ResponseEntity<Void> runFullProcess(){
 		try {
 			runner.runProcess();
