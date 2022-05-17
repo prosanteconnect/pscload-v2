@@ -11,22 +11,6 @@ import fr.ans.psc.model.Expertise;
 import fr.ans.psc.model.Profession;
 import fr.ans.psc.model.WorkSituation;
 
-/**
- * Can equal.
- *
- * @param other the other
- * @return true, if successful
- */
-
-/**
- */
-
-/**
- * Can equal.
- *
- * @param other the other
- * @return true, if successful
- */
 public class ExerciceProfessionnel extends Profession {
 
 	private static final long serialVersionUID = 546016744459782913L;
@@ -79,7 +63,23 @@ public class ExerciceProfessionnel extends Profession {
 
 	@Override
 	public boolean equals(Object o) {
-		return super.equals(o);
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		ExerciceProfessionnel exPro = (ExerciceProfessionnel) o;
+		return Objects.equals(this.getExProId(), exPro.getExProId()) &&
+				Objects.equals(this.getCode(), exPro.getCode()) &&
+				Objects.equals(this.getCategoryCode(), exPro.getCategoryCode()) &&
+				Objects.equals(this.getSalutationCode(), exPro.getSalutationCode()) &&
+				Objects.equals(this.getLastName(), exPro.getLastName()) &&
+				Objects.equals(this.getFirstName(), exPro.getFirstName()) &&
+				Objects.equals(this.getSavoirFaire().size(), exPro.getSavoirFaire().size()) &&
+				this.getSavoirFaire().containsAll(exPro.getSavoirFaire()) &&
+				Objects.equals(this.getSituationsExercice().size(), exPro.getSituationsExercice().size()) &&
+				this.getSituationsExercice().containsAll(exPro.getSituationsExercice());
 	}
 
 	@Override

@@ -9,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.File;
 import java.io.IOException;
 
+import com.google.common.collect.MapDifference;
+import com.google.common.collect.Maps;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -119,5 +121,27 @@ public class MapsHandlerTest {
             Professionnel generatedPs = generatedMaps.getPsMap().get(professionnel.getInternalId());
             assert professionnel.equals(generatedPs);
         });
+    }
+
+    @Test
+    @DisplayName("check order impact on hashCode and equals methods")
+    public void checkDifferentOrderForPs() throws IOException {
+        File file1 = new File(Thread.currentThread().getContextClassLoader()
+                .getResource("2WorkSituationsOrder1").getPath());
+        MapsHandler order1Map = new MapsHandler();
+        order1Map.loadMapsFromFile(file1);
+
+        File file2 = new File(Thread.currentThread().getContextClassLoader()
+                .getResource("2WorkSituationsOrder2").getPath());
+        MapsHandler order2Map = new MapsHandler();
+        order2Map.loadMapsFromFile(file2);
+
+        assertEquals(1,order1Map.getPsMap().size());
+        assertEquals(1, order2Map.getPsMap().size());
+
+        MapDifference<String, Professionnel> diffPs = Maps.difference(order1Map.getPsMap(), order2Map.getPsMap());
+        assertEquals(0, diffPs.entriesDiffering().size());
+        assertEquals(order1Map.getPsMap().get("810107592544").hashCode(), order2Map.getPsMap().get("810107592544").hashCode());
+        assertEquals(order1Map.getPsMap().get("810107592544"), order2Map.getPsMap().get("810107592544"));
     }
 }

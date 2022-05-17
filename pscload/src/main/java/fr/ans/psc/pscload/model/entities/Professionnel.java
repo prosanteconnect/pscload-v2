@@ -11,12 +11,6 @@ import java.util.Optional;
 import fr.ans.psc.model.Profession;
 import fr.ans.psc.model.Ps;
 
-/**
- * Can equal.
- *
- * @param other the other
- * @return true, if successful
- */
 public class Professionnel extends Ps implements RassEntity {
 
 	/**
@@ -120,7 +114,29 @@ public class Professionnel extends Ps implements RassEntity {
   
 	@Override
 	public boolean equals(Object o) {
-		return super.equals(o);
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		Professionnel professionnel = (Professionnel) o;
+
+		return Objects.equals(this.getIdType(), professionnel.getIdType()) &&
+				Objects.equals(this.getId(), professionnel.getId()) &&
+				Objects.equals(this.getNationalId(), professionnel.getNationalId()) &&
+				Objects.equals(this.getLastName(), professionnel.getLastName()) &&
+				Objects.equals(this.getFirstName(), professionnel.getFirstName()) &&
+				Objects.equals(this.getDateOfBirth(), professionnel.getDateOfBirth()) &&
+				Objects.equals(this.getBirthAddressCode(), professionnel.getBirthAddressCode()) &&
+				Objects.equals(this.getBirthCountryCode(), professionnel.getBirthCountryCode()) &&
+				Objects.equals(this.getBirthAddress(), professionnel.getBirthAddress()) &&
+				Objects.equals(this.getGenderCode(), professionnel.getGenderCode()) &&
+				Objects.equals(this.getPhone(), professionnel.getPhone()) &&
+				Objects.equals(this.getEmail(), professionnel.getEmail()) &&
+				Objects.equals(this.getSalutationCode(), professionnel.getSalutationCode()) &&
+				Objects.equals(this.getExercicesProfessionels().size(), professionnel.getExercicesProfessionels().size()) &&
+				this.getExercicesProfessionels().containsAll(professionnel.getExercicesProfessionels());
 	}
 
 	@Override
