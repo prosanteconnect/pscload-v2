@@ -3,14 +3,13 @@
  */
 package fr.ans.psc.pscload.state;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.any;
-import static com.github.tomakehurst.wiremock.client.WireMock.anyUrl;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 
+import fr.ans.psc.pscload.service.MessageProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,6 +43,9 @@ class ReadyToComputeDiffTest {
 
 	@Autowired
 	private EmailService emailService;
+
+	@Autowired
+	private MessageProducer messageProducer;
 
 	/** The http mock server. */
 	@RegisterExtension
@@ -128,7 +130,7 @@ class ReadyToComputeDiffTest {
 		p.setExtractedFilename(extractFile.getPath());
 		p.nextStep();
 		String[] exclusions = {"90"};
-		p.setState(new UploadingChanges(exclusions, httpMockServer.baseUrl()));
+		p.setState(new UploadingChanges(exclusions, httpMockServer.baseUrl(), messageProducer));
 		p.getState().setProcess(p);
 		p.nextStep();
 		p.setState(new ChangesApplied(customMetrics, httpMockServer.baseUrl(), emailService));

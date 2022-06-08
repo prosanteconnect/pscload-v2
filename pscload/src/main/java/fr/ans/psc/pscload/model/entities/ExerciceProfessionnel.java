@@ -11,7 +11,6 @@ import fr.ans.psc.model.Expertise;
 import fr.ans.psc.model.Profession;
 import fr.ans.psc.model.WorkSituation;
 
-
 public class ExerciceProfessionnel extends Profession {
 
 	private static final long serialVersionUID = 546016744459782913L;

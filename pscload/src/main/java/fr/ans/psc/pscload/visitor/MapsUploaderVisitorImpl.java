@@ -10,6 +10,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import fr.ans.psc.pscload.model.operations.OperationType;
+import fr.ans.psc.pscload.service.MessageProducer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClientResponseException;
@@ -36,6 +38,8 @@ public class MapsUploaderVisitorImpl implements MapsVisitor {
 
 	private PsApi psApi;
 
+	private MessageProducer messageProducer;
+
 	@Value("${snitch}")
 	private boolean debug;
 
@@ -45,12 +49,14 @@ public class MapsUploaderVisitorImpl implements MapsVisitor {
 	 * @param excludedProfessions the excluded professions
 	 * @param apiBaseUrl          the api base url
 	 */
-	public MapsUploaderVisitorImpl(String[] excludedProfessions, String apiBaseUrl) {
+	public MapsUploaderVisitorImpl(String[] excludedProfessions, String apiBaseUrl, MessageProducer messageProducer) {
 		super();
 		this.excludedProfessions = excludedProfessions;
 		ApiClient apiClient = new ApiClient();
 		apiClient.setBasePath(apiBaseUrl);
 		this.psApi = new PsApi(apiClient);
+		this.messageProducer = messageProducer;
+
 	}
 
 	@Override
@@ -71,6 +77,7 @@ public class MapsUploaderVisitorImpl implements MapsVisitor {
 				}
 				psApi.createNewPs((Professionnel) item);
 				map.remove(item.getInternalId());
+				messageProducer.sendPsMessage((Professionnel) item, OperationType.CREATE);
 			} catch (RestClientResponseException e) {
 				log.error("error when {} : {}, return code : {}", map.getOperation().toString(), item.getInternalId(),
 						e.getLocalizedMessage());
@@ -114,6 +121,7 @@ public class MapsUploaderVisitorImpl implements MapsVisitor {
 				}
 				// remove anyway : extract Ps from maps either successful or ignored
 				map.remove(item.getInternalId());
+				messageProducer.sendPsMessage((Professionnel) item, OperationType.DELETE);
 			} catch (RestClientResponseException e) {
 				log.error("error when {} : {}, return code : {}", map.getOperation().toString(), item.getInternalId(),
 						e.getLocalizedMessage());
@@ -144,14 +152,9 @@ public class MapsUploaderVisitorImpl implements MapsVisitor {
 					throw new LockedMapException();
 				}
 				psApi.updatePs((Professionnel) item);
-
-					Professionnel updatedPs = (Professionnel) item;
-					if(updatedPs.equals(map.getOldValue(item.getInternalId()))) {
-						log.info("Ps {} updated but with no changes", item.getInternalId());
-					}
-
 				map.remove(item.getInternalId());
 				map.getOldValues().remove(item.getInternalId());
+				messageProducer.sendPsMessage((Professionnel) item, OperationType.UPDATE);
 			} catch (RestClientResponseException e) {
 				log.error("error when {} : {}, return code : {}", map.getOperation().toString(), item.getInternalId(),
 						e.getLocalizedMessage());

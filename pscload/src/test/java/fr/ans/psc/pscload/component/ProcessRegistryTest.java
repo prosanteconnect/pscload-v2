@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import fr.ans.psc.pscload.service.MessageProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -78,6 +79,9 @@ class ProcessRegistryTest {
 
 	@Autowired
 	private EmailService emailService;
+
+	@Autowired
+	private MessageProducer messageProducer;
 
 	@Autowired
 	private Kryo kryo;
@@ -202,7 +206,7 @@ class ProcessRegistryTest {
 
 		LoadProcess process = generateDiff("Extraction_ProSanteConnect_Personne_activite_202112120512.txt", "Extraction_ProSanteConnect_Personne_activite_202112120515.txt");
 		String[] exclusions = {"90"};
-		process.setState(new UploadingChanges(exclusions, httpMockServer.baseUrl()));
+		process.setState(new UploadingChanges(exclusions, httpMockServer.baseUrl(), messageProducer));
 
 		registry.register("1", process);
 
@@ -270,7 +274,7 @@ class ProcessRegistryTest {
 		p.setExtractedFilename(extractFile.getPath());
 		p.nextStep();
 		String[] exclusions = {"90"};
-		p.setState(new UploadingChanges(exclusions, httpMockServer.baseUrl()));
+		p.setState(new UploadingChanges(exclusions, httpMockServer.baseUrl(), messageProducer));
 		p.getState().setProcess(p);
 		p.nextStep();
 		p.setState(new ChangesApplied(customMetrics, httpMockServer.baseUrl(), emailService));

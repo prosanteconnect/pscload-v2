@@ -9,6 +9,7 @@ import com.esotericsoftware.kryo.io.Output;
 
 import fr.ans.psc.pscload.model.entities.RassEntity;
 import fr.ans.psc.pscload.model.operations.OperationMap;
+import fr.ans.psc.pscload.service.MessageProducer;
 import fr.ans.psc.pscload.state.exception.LoadProcessException;
 import fr.ans.psc.pscload.state.exception.LockedMapException;
 import fr.ans.psc.pscload.visitor.MapsUploaderVisitorImpl;
@@ -30,6 +31,8 @@ public class UploadingChanges extends ProcessState {
 
     private String apiBaseUrl;
 
+    private MessageProducer messageProducer;
+
     private List<String> excludedOperations;
 
     /**
@@ -38,13 +41,14 @@ public class UploadingChanges extends ProcessState {
      * @param excludedProfessions the excluded professions
      * @param apiBaseUrl          the api base url
      */
-    public UploadingChanges(String[] excludedProfessions, String apiBaseUrl) {
-        this(excludedProfessions, apiBaseUrl, null);
+    public UploadingChanges(String[] excludedProfessions, String apiBaseUrl, MessageProducer messageProducer) {
+        this(excludedProfessions, apiBaseUrl, messageProducer, null);
     }
 
-    public UploadingChanges(String[] excludedProfessions, String apiBaseUrl, List<String> excludedOperations) {
+    public UploadingChanges(String[] excludedProfessions, String apiBaseUrl, MessageProducer messageProducer, List<String> excludedOperations) {
         this.excludedProfessions = excludedProfessions;
         this.apiBaseUrl = apiBaseUrl;
+        this.messageProducer = messageProducer;
         this.excludedOperations = excludedOperations;
     }
 
@@ -59,7 +63,7 @@ public class UploadingChanges extends ProcessState {
     public void nextStep() throws LoadProcessException {
         log.info("calling API...");
     	
-		MapsVisitor visitor = new MapsUploaderVisitorImpl(excludedProfessions, apiBaseUrl);
+		MapsVisitor visitor = new MapsUploaderVisitorImpl(excludedProfessions, apiBaseUrl, messageProducer);
 
         List<OperationMap<String, RassEntity>> processMaps = process.getMaps();
         if (excludedOperations != null) {

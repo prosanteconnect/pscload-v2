@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import fr.ans.psc.pscload.service.MessageProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -19,6 +20,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.ContextStartedEvent;
@@ -68,6 +70,9 @@ import lombok.extern.slf4j.Slf4j;
 @EnableScheduling
 @EnableAsync
 @Slf4j
+// this annotation is required since the rabbitmq shared config stands in its own package
+// idk why but it didn't work without this explicit scan
+@ComponentScan(basePackages = {"fr.ans.psc.pscload", "fr.ans.psc.rabbitmq.conf"})
 public class PscloadApplication {
 
 	private static Kryo kryo;
@@ -117,6 +122,9 @@ public class PscloadApplication {
 
 	@Autowired
 	private EmailService emailService;
+
+	@Autowired
+	private MessageProducer messageProducer;
 
 	@Value("${files.directory:.}")
 	private String filesDirectory;
@@ -223,7 +231,7 @@ public class PscloadApplication {
 									customMetrics.getAppMiscGauges().get(CustomMetrics.MiscCustomMetric.STAGE)
 											.set(Stage.UPLOAD_CHANGES_STARTED.value);
 
-									process.setState(new UploadingChanges(excludedProfessions, apiBaseUrl));
+									process.setState(new UploadingChanges(excludedProfessions, apiBaseUrl, messageProducer));
 									process.nextStep();
 
 								}

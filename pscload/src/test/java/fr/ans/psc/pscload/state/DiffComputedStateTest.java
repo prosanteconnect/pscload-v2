@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.File;
 import java.io.IOException;
 
+import fr.ans.psc.pscload.service.MessageProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,9 @@ public class DiffComputedStateTest {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private MessageProducer messageProducer;
 
     /** The http mock server. */
     @RegisterExtension
@@ -116,7 +120,7 @@ public class DiffComputedStateTest {
                 SizeMetric.REFERENCE_RPPS_SIZE).get());
 
         String[] exclusions = { "90" };
-        p.setState(new UploadingChanges(exclusions, httpMockServer.baseUrl()));
+        p.setState(new UploadingChanges(exclusions, httpMockServer.baseUrl(), messageProducer));
         p.getState().setProcess(p);
         p.nextStep();
         p.setState(new ChangesApplied(customMetrics, httpMockServer.baseUrl(), emailService));

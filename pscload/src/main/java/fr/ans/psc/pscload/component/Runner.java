@@ -8,6 +8,7 @@ import java.time.Duration;
 import java.util.Date;
 import java.util.List;
 
+import fr.ans.psc.pscload.service.MessageProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -49,6 +50,9 @@ public class Runner {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private MessageProducer messageProducer;
 
     @Value("${enable.scheduler:true}")
     private boolean enabled;
@@ -174,7 +178,7 @@ public class Runner {
         try {
             // upload changes
             log.info("Received request to process in Runner.runContinue()");
-            process.setState(new UploadingChanges(excludedProfessions, apiBaseUrl, excludedOperations));
+            process.setState(new UploadingChanges(excludedProfessions, apiBaseUrl, messageProducer, excludedOperations));
             customMetrics.resetSizeMetrics();
             customMetrics.setStageMetric(Stage.UPLOAD_CHANGES_STARTED);
             process.nextStep();
