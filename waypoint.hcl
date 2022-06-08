@@ -17,7 +17,7 @@ runner {
 }
 
 # An application to deploy.
-app "prosanteconnect/pscload" {
+app "prosanteconnect/pscload-v2" {
   # Build specifies how an application should be deployed. In this case,
   # we'll build using a Dockerfile and keeping it in a local registry.
   build {
@@ -30,8 +30,7 @@ app "prosanteconnect/pscload" {
       use "docker" {
         image = "${var.registry_path}/pscload-v2"
         tag = gitrefpretty()
-        username = var.registry_username
-        password = var.registry_password
+        encoded_auth = filebase64("/secrets/dockerAuth.json")
       }
     }
   }
