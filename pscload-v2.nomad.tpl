@@ -81,6 +81,11 @@ files.directory=/app/files-repo
 cert.path=/secrets/certificate.pem
 key.path=/secrets/key.pem
 ca.path=/secrets/cacerts.pem
+{{ range service "psc-rabbitmq" }}
+spring.rabbitmq.host={{ .Address }}
+spring.rabbitmq.port={{ .Port }}{{ end }}
+spring.rabbitmq.username={{ with secret "psc-ecosystem/rabbitmq" }}{{ .Data.data.user }}
+spring.rabbitmq.password={{ .Data.data.password }}{{ end }}
 extract.download.url={{ with secret "psc-ecosystem/pscload" }}{{ .Data.data.extract_download_url }}{{ end }}
 test.download.url={{ with secret "psc-ecosystem/pscload" }}{{ .Data.data.test_download_url }}{{ end }}
 use.x509.auth=true
