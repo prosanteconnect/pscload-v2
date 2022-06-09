@@ -46,6 +46,7 @@ public class MaintenanceController {
     @PostMapping(value = "/maintenance/regen-ser-file")
     public ResponseEntity<Void> generateSerFile(@RequestParam MultipartFile restoreFile) {
 
+        log.info("generating new ser file");
         try {
             InputStream initialStream = restoreFile.getInputStream();
             byte[] buffer = new byte[initialStream.available()];
