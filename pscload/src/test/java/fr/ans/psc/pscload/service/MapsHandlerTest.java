@@ -9,9 +9,15 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
+import fr.ans.psc.model.FirstName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -144,5 +150,31 @@ public class MapsHandlerTest {
         assertEquals(0, diffPs.entriesDiffering().size());
         assertEquals(order1Map.getPsMap().get("810107592544").hashCode(), order2Map.getPsMap().get("810107592544").hashCode());
         assertEquals(order1Map.getPsMap().get("810107592544"), order2Map.getPsMap().get("810107592544"));
+    }
+
+    @Test
+    @DisplayName("check that the order of first names is handled correctly")
+    public void checkCorrectFirstNameOrder() throws IOException {
+      File file = new File(Thread.currentThread().getContextClassLoader().getResource("FirstNameOrder").getPath());
+      MapsHandler nameOrderMap = new MapsHandler();
+      nameOrderMap.loadMapsFromFile(file);
+
+      assertEquals(3, nameOrderMap.getPsMap().size());
+
+      Professionnel professionnel123 = nameOrderMap.getPsMap().get("1");
+      Professionnel professionnel231 = nameOrderMap.getPsMap().get("2");
+      Professionnel professionnel31 = nameOrderMap.getPsMap().get("3");
+
+      professionnel123.getFirstNames().sort((Comparator.comparing(FirstName::getOrder)));
+      professionnel231.getFirstNames().sort((Comparator.comparing(FirstName::getOrder)));
+      professionnel31.getFirstNames().sort((Comparator.comparing(FirstName::getOrder)));
+
+      for (Professionnel professionnel : Arrays.asList(professionnel123, professionnel231, professionnel31)) {
+        System.out.println("\nChecking the order of first names in "+professionnel.getFirstNames());
+        for (int i = 0; i < professionnel.getFirstNames().size(); i++) {
+          assertEquals(i, professionnel.getFirstNames().get(i).getOrder());
+          System.out.println("Order of "+professionnel.getFirstNames().get(i)+" is "+professionnel.getFirstNames().get(i).getOrder());
+        }
+      }
     }
 }

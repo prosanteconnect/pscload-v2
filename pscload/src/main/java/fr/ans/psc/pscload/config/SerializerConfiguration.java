@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import fr.ans.psc.model.FirstName;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -68,6 +69,7 @@ public class SerializerConfiguration {
 		kryo.register(PsCreateMap.class, 32);
 		kryo.register(PsUpdateMap.class, operationMapSerializer, 33);
 		kryo.register(PsDeleteMap.class, 34);
+		kryo.register(FirstName.class, 35);
 		return kryo;
 	}
 }

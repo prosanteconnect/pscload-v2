@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
+import fr.ans.psc.model.FirstName;
 import org.apache.any23.encoding.TikaEncodingDetector;
 
 import com.esotericsoftware.kryo.Kryo;
@@ -67,6 +68,7 @@ public class MapsHandler implements KryoSerializable {
 		kryo.register(SavoirFaire.class, 13);
 		kryo.register(SituationExercice.class, 14);
 		kryo.register(Structure.class, 16);
+		kryo.register(FirstName.class, 35);
 	}
 
 	private static final int ROW_LENGTH = RassItems.values().length + 1;

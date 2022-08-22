@@ -7,6 +7,7 @@ import fr.ans.psc.pscload.model.LoadProcess;
 import fr.ans.psc.pscload.model.entities.*;
 import fr.ans.psc.pscload.model.operations.*;
 import fr.ans.psc.pscload.state.*;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -68,6 +69,7 @@ public class RegistryDeserializationTest {
      *
      * @throws IOException Signals that an I/O exception has occurred.
      */
+    @Disabled
     @Test
     public void readRegistryAfterShutdownTest() throws IOException {
 //        File registryFile = FileUtils.copyFileToWorkspace("registry.ser");

@@ -5,7 +5,7 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ main, api-v3-model ]
+    branches: [ main, api-v3-model, feat/references-in-ps ]
   pull_request:
     branches: [ main ]
 

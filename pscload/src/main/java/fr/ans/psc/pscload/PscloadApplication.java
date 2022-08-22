@@ -197,7 +197,7 @@ public class PscloadApplication {
 
 				// RESUME PROCESS
 				LoadProcess process = registry.getCurrentProcess();
-				if (process != null) {
+				if (process != null && process.getState() != null) {
 					Class<? extends ProcessState> stateClass = process.getState().getClass();
 
 					// checking expirability of the state of a process is equivalent to check its

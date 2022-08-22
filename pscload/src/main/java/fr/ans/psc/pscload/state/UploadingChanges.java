@@ -12,6 +12,7 @@ import fr.ans.psc.pscload.model.operations.OperationMap;
 import fr.ans.psc.pscload.service.MessageProducer;
 import fr.ans.psc.pscload.state.exception.LoadProcessException;
 import fr.ans.psc.pscload.state.exception.LockedMapException;
+import fr.ans.psc.pscload.state.exception.UploadException;
 import fr.ans.psc.pscload.visitor.MapsUploaderVisitorImpl;
 import fr.ans.psc.pscload.visitor.MapsVisitor;
 import lombok.extern.slf4j.Slf4j;
@@ -79,6 +80,7 @@ public class UploadingChanges extends ProcessState {
             log.info("API operations done.");
         } catch (LockedMapException e) {
             log.error("Shutdown was initiated during Uploading Changes stage.");
+            throw new UploadException("Shutdown was initiated during Uploading Changes stage.");
         }
 
     }

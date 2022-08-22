@@ -21,7 +21,7 @@ public enum RassItems {
     LAST_NAME(3),
     
     /** The first name. */
-    FIRST_NAME(4),
+    FIRST_NAMES(4),
     
     /** The dob. */
     DOB(5),

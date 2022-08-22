@@ -160,6 +160,7 @@ public class ChangesApplied extends ProcessState {
         } catch (LockedMapException e) {
             log.error("Shutdown was initiated during Changes Applied stage. " +
                     "No serialized file will be generated before complete shutdown.");
+            throw new SerFileGenerationException("Shutdown initiated during Changes Applied stage, will mutate in SerializationInterrupted");
         }
     }
 

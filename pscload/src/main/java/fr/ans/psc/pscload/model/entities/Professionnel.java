@@ -3,6 +3,7 @@
  */
 package fr.ans.psc.pscload.model.entities;
 
+import fr.ans.psc.model.FirstName;
 import fr.ans.psc.model.Profession;
 import fr.ans.psc.model.Ps;
 
@@ -14,10 +15,10 @@ import java.util.Optional;
 public class Professionnel extends Ps implements RassEntity {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -2859304844064466893L;
-	
+
 	/**
 	 * returnStatus after failure in change request
 	 */
@@ -42,7 +43,7 @@ public class Professionnel extends Ps implements RassEntity {
 		setId(items[RassItems.ID.column]);
 		setNationalId(items[RassItems.NATIONAL_ID.column]);
 		setLastName(items[RassItems.LAST_NAME.column]);
-		setFirstName(items[RassItems.FIRST_NAME.column]);
+		setFirstNames(Prenom.stringToList(items[RassItems.FIRST_NAMES.column]));
 		setDateOfBirth(items[RassItems.DOB.column]);
 		setBirthAddressCode(items[RassItems.BIRTH_ADDRESS_CODE.column]);
 		setBirthCountryCode(items[RassItems.BIRTH_COUNTRY_CODE.column]);
@@ -61,7 +62,7 @@ public class Professionnel extends Ps implements RassEntity {
 		items[RassItems.ID.column] = getId();
 		items[RassItems.NATIONAL_ID.column] = getNationalId();
 		items[RassItems.LAST_NAME.column] = getLastName();
-		items[RassItems.FIRST_NAME.column] = getFirstName();
+		items[RassItems.FIRST_NAMES.column] = Prenom.listToString(getFirstNames());
 		items[RassItems.DOB.column] = getDateOfBirth();
 		items[RassItems.BIRTH_ADDRESS_CODE.column] = getBirthAddressCode();
 		items[RassItems.BIRTH_COUNTRY_CODE.column] = getBirthCountryCode();
@@ -99,7 +100,7 @@ public class Professionnel extends Ps implements RassEntity {
 	public String getInternalId() {
 		return getNationalId();
 	}
-	
+
 	@Override
 	public String getIdType() {
 		return super.getIdType();
@@ -126,7 +127,7 @@ public class Professionnel extends Ps implements RassEntity {
 				Objects.equals(this.getId(), professionnel.getId()) &&
 				Objects.equals(this.getNationalId(), professionnel.getNationalId()) &&
 				Objects.equals(this.getLastName(), professionnel.getLastName()) &&
-				Objects.equals(this.getFirstName(), professionnel.getFirstName()) &&
+				this.getFirstNames().containsAll(professionnel.getFirstNames()) &&
 				Objects.equals(this.getDateOfBirth(), professionnel.getDateOfBirth()) &&
 				Objects.equals(this.getBirthAddressCode(), professionnel.getBirthAddressCode()) &&
 				Objects.equals(this.getBirthCountryCode(), professionnel.getBirthCountryCode()) &&
@@ -136,15 +137,19 @@ public class Professionnel extends Ps implements RassEntity {
 				Objects.equals(this.getEmail(), professionnel.getEmail()) &&
 				Objects.equals(this.getSalutationCode(), professionnel.getSalutationCode()) &&
 				Objects.equals(this.getExercicesProfessionels().size(), professionnel.getExercicesProfessionels().size()) &&
-				this.getExercicesProfessionels().containsAll(professionnel.getExercicesProfessionels());
+				this.getExercicesProfessionels().containsAll(professionnel.getExercicesProfessionels()) &&
+				(this.getIds()==null || this.getIds().containsAll(professionnel.getIds())) &&
+				Objects.equals(this.getActivated(), professionnel.getActivated()) &&
+				Objects.equals(this.getDeactivated(), professionnel.getDeactivated());
 	}
 
 //	we have to reduce all list hash codes to ensure unsorted lists always return the same hash code
 	@Override
 	public int hashCode() {
-		return Objects.hash(getIdType(), getId(), getNationalId(), getLastName(), getFirstName(),
+		return Objects.hash(getIdType(), getId(), getNationalId(), getLastName(), getFirstNames().stream().map(FirstName::hashCode).reduce(0, Integer::sum),
 				getDateOfBirth(), getBirthAddressCode(), getBirthCountryCode(), getBirthAddress(),
 				getGenderCode(), getPhone(), getEmail(), getSalutationCode(),
-				getExercicesProfessionels().stream().map(ExerciceProfessionnel::hashCode).reduce(0, Integer::sum));
+				getExercicesProfessionels().stream().map(ExerciceProfessionnel::hashCode).reduce(0, Integer::sum),
+				(this.getIds() == null ? null : getIds().stream().map(String::hashCode).reduce(0, Integer::sum)), getActivated(), getDeactivated());
 	}
 }
