@@ -41,6 +41,9 @@ public class EmailService {
     @Value("${enable.emailing}")
     private boolean enableEmailing;
 
+    @Value("${secpsc.environment}")
+    private String platform;
+
 
     public void setEmailSender(JavaMailSender emailSender) {
         this.emailSender = emailSender;
@@ -61,7 +64,7 @@ public class EmailService {
                 helper.setFrom(sender);
                 String[] allReceivers = receiver.split(",");
                 helper.setTo(allReceivers);
-                helper.setSubject(template.subject);
+                helper.setSubject(platform + " " + template.subject);
 
                 Multipart emailContent = new MimeMultipart();
                 MimeBodyPart textBody = new MimeBodyPart();
