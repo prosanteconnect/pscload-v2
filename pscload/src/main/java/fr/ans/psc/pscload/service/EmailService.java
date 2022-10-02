@@ -64,7 +64,7 @@ public class EmailService {
                 helper.setFrom(sender);
                 String[] allReceivers = receiver.split(",");
                 helper.setTo(allReceivers);
-                helper.setSubject(platform + " " + template.subject);
+                helper.setSubject(platform + " - " + template.subject);
 
                 Multipart emailContent = new MimeMultipart();
                 MimeBodyPart textBody = new MimeBodyPart();
