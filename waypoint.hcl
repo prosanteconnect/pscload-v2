@@ -17,7 +17,7 @@ runner {
 }
 
 # An application to deploy.
-app "prosanteconnect/pscload" {
+app "prosanteconnect/pscload-v2" {
   # Build specifies how an application should be deployed. In this case,
   # we'll build using a Dockerfile and keeping it in a local registry.
   build {
