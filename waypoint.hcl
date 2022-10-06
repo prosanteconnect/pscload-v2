@@ -30,7 +30,8 @@ app "prosanteconnect/pscload-v2" {
       use "docker" {
         image = "${var.registry_path}/pscload-v2"
         tag = gitrefpretty()
-        encoded_auth = filebase64("/secrets/dockerAuth.json")
+        username = var.registry_username
+        password = var.registry_password
       }
     }
   }
